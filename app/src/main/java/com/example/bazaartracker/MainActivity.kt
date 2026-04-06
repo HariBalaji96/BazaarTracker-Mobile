@@ -14,7 +14,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val authViewModel: AuthViewModel = viewModel()
-            var currentScreen by remember { mutableStateOf("login") }
+            
+            // Check if token exists to determine initial screen
+            val hasToken = remember { ApiClient.getToken(this) != null }
+            var currentScreen by remember { mutableStateOf(if (hasToken) "main" else "login") }
 
             BazaarTrackerTheme {
                 when (currentScreen) {
@@ -45,6 +48,7 @@ class MainActivity : ComponentActivity() {
                     "main" -> {
                         MainScreen(
                             onLogout = {
+                                ApiClient.clearToken(this)
                                 authViewModel.resetState()
                                 currentScreen = "login"
                             }

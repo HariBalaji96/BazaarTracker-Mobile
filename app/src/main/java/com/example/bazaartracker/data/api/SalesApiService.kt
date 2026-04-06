@@ -1,5 +1,8 @@
-package com.example.bazaartracker
+package com.example.bazaartracker.data.api
 
+import com.example.bazaartracker.data.models.CreateSaleRequest
+import com.example.bazaartracker.data.models.Sale
+import com.example.bazaartracker.data.models.SaleResponse
 import retrofit2.http.*
 
 interface SalesApiService {

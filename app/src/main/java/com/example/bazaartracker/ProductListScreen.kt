@@ -36,12 +36,13 @@ fun ProductListScreen(viewModel: ProductViewModel) {
     }
 
     Scaffold(
-        containerColor = Color(0xFF121212),
+        containerColor = MaterialTheme.colorScheme.background,
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { showAddDialog = true },
                 containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = Color.White
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+                shape = RoundedCornerShape(16.dp)
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Add Product")
             }
@@ -56,11 +57,10 @@ fun ProductListScreen(viewModel: ProductViewModel) {
             } else if (error != null && products.isEmpty()) {
                 Text(
                     text = error ?: "Unknown Error",
-                    color = Color.Red,
+                    color = MaterialTheme.colorScheme.error,
                     modifier = Modifier.align(Alignment.Center).padding(16.dp)
                 )
             } else if (!isLoading && products.isEmpty()) {
-                // Empty State View
                 Column(
                     modifier = Modifier.fillMaxSize().padding(32.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -70,20 +70,20 @@ fun ProductListScreen(viewModel: ProductViewModel) {
                         imageVector = Icons.Default.Inventory,
                         contentDescription = null,
                         modifier = Modifier.size(80.dp),
-                        tint = Color.Gray.copy(alpha = 0.5f)
+                        tint = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         text = "No Products Found",
                         style = MaterialTheme.typography.headlineSmall,
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onBackground,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = "Start by adding your first product using the + button below.",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Gray,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center
                     )
                 }
@@ -97,7 +97,7 @@ fun ProductListScreen(viewModel: ProductViewModel) {
                         Text(
                             text = "Products",
                             style = MaterialTheme.typography.headlineMedium,
-                            color = Color.White,
+                            color = MaterialTheme.colorScheme.onBackground,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
@@ -113,7 +113,6 @@ fun ProductListScreen(viewModel: ProductViewModel) {
             }
         }
 
-        // ... Dialogs remain the same ...
         if (showAddDialog) {
             ProductDialog(
                 title = "Add New Product",
@@ -144,23 +143,23 @@ fun ProductListScreen(viewModel: ProductViewModel) {
         productToDelete?.let { product ->
             AlertDialog(
                 onDismissRequest = { productToDelete = null },
-                containerColor = Color(0xFF1E1E1E),
-                title = { Text("Delete Product", color = Color.White) },
-                text = { Text("Are you sure you want to delete ${product.name}?", color = Color.Gray) },
+                containerColor = MaterialTheme.colorScheme.surface,
+                title = { Text("Delete Product", color = MaterialTheme.colorScheme.onSurface) },
+                text = { Text("Are you sure you want to delete ${product.name}?", color = MaterialTheme.colorScheme.onSurfaceVariant) },
                 confirmButton = {
                     Button(
                         onClick = {
                             viewModel.deleteProduct(product.id)
                             productToDelete = null
                         },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
                     ) {
-                        Text("Delete", color = Color.White)
+                        Text("Delete")
                     }
                 },
                 dismissButton = {
                     TextButton(onClick = { productToDelete = null }) {
-                        Text("Cancel", color = Color.Gray)
+                        Text("Cancel", color = MaterialTheme.colorScheme.outline)
                     }
                 }
             )
@@ -173,7 +172,8 @@ fun ProductCard(product: Product, onEdit: (Product) -> Unit, onDelete: (Product)
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E))
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
             modifier = Modifier
@@ -186,28 +186,35 @@ fun ProductCard(product: Product, onEdit: (Product) -> Unit, onDelete: (Product)
                 Text(
                     text = product.name,
                     style = MaterialTheme.typography.titleLarge,
-                    color = Color.White,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "Stock: ${product.stock}",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Gray
-                )
-                Text(
-                    text = "₹${product.price}",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.primary,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold
                 )
+                Spacer(modifier = Modifier.height(4.dp))
+                Surface(
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text(
+                        text = "Stock: ${product.stock}",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "₹${product.price}",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.ExtraBold
+                )
             }
-            Row {
+            Column(horizontalAlignment = Alignment.End) {
                 IconButton(onClick = { onEdit(product) }) {
-                    Icon(Icons.Default.Edit, contentDescription = "Edit", tint = Color.Gray)
+                    Icon(Icons.Default.Edit, contentDescription = "Edit", tint = MaterialTheme.colorScheme.primary)
                 }
                 IconButton(onClick = { onDelete(product) }) {
-                    Icon(Icons.Default.Delete, contentDescription = "Delete", tint = Color.Red.copy(alpha = 0.7f))
+                    Icon(Icons.Default.Delete, contentDescription = "Delete", tint = MaterialTheme.colorScheme.error.copy(alpha = 0.8f))
                 }
             }
         }
@@ -230,47 +237,32 @@ fun ProductDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(title, color = Color.White) },
-        containerColor = Color(0xFF1E1E1E),
+        title = { Text(title, color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold) },
+        containerColor = MaterialTheme.colorScheme.surface,
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
                     label = { Text("Product Name") },
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        focusedLabelColor = MaterialTheme.colorScheme.primary,
-                        unfocusedLabelColor = Color.Gray
-                    ),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp)
                 )
                 OutlinedTextField(
                     value = price,
                     onValueChange = { price = it },
                     label = { Text("Price (₹)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        focusedLabelColor = MaterialTheme.colorScheme.primary,
-                        unfocusedLabelColor = Color.Gray
-                    ),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp)
                 )
                 OutlinedTextField(
                     value = stock,
                     onValueChange = { stock = it },
                     label = { Text("Stock") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        focusedLabelColor = MaterialTheme.colorScheme.primary,
-                        unfocusedLabelColor = Color.Gray
-                    ),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp)
                 )
             }
         },
@@ -283,15 +275,15 @@ fun ProductDialog(
                         onConfirm(name, p, s)
                     }
                 },
-                enabled = name.isNotBlank() && price.isNotBlank() && stock.isNotBlank()
+                enabled = name.isNotBlank() && price.isNotBlank() && stock.isNotBlank(),
+                shape = RoundedCornerShape(8.dp)
             ) {
-                val buttonText = if (title.contains("Add")) "Add" else "Update"
-                Text(buttonText)
+                Text(if (title.contains("Add")) "Add Product" else "Update Product")
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel", color = Color.Gray)
+                Text("Cancel", color = MaterialTheme.colorScheme.outline)
             }
         }
     )

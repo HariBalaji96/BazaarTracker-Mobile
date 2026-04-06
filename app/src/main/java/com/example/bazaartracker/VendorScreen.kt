@@ -33,12 +33,13 @@ fun VendorScreen(viewModel: VendorViewModel) {
     }
 
     Scaffold(
-        containerColor = Color(0xFF121212),
+        containerColor = MaterialTheme.colorScheme.background,
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { showAddDialog = true },
                 containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = Color.White
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+                shape = RoundedCornerShape(16.dp)
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Add Vendor")
             }
@@ -53,7 +54,7 @@ fun VendorScreen(viewModel: VendorViewModel) {
             } else if (error != null && vendors.isEmpty()) {
                 Text(
                     text = error ?: "Unknown Error",
-                    color = Color.Red,
+                    color = MaterialTheme.colorScheme.error,
                     modifier = Modifier.align(Alignment.Center).padding(16.dp)
                 )
             } else if (!isLoading && vendors.isEmpty()) {
@@ -66,20 +67,20 @@ fun VendorScreen(viewModel: VendorViewModel) {
                         imageVector = Icons.Default.People,
                         contentDescription = null,
                         modifier = Modifier.size(80.dp),
-                        tint = Color.Gray.copy(alpha = 0.5f)
+                        tint = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         text = "No Vendors Found",
                         style = MaterialTheme.typography.headlineSmall,
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onBackground,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = "Start by adding your first vendor using the + button below.",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Gray,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center
                     )
                 }
@@ -93,7 +94,7 @@ fun VendorScreen(viewModel: VendorViewModel) {
                         Text(
                             text = "Vendors",
                             style = MaterialTheme.typography.headlineMedium,
-                            color = Color.White,
+                            color = MaterialTheme.colorScheme.onBackground,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
@@ -139,23 +140,23 @@ fun VendorScreen(viewModel: VendorViewModel) {
         vendorToDelete?.let { vendor ->
             AlertDialog(
                 onDismissRequest = { vendorToDelete = null },
-                containerColor = Color(0xFF1E1E1E),
-                title = { Text("Delete Vendor", color = Color.White) },
-                text = { Text("Are you sure you want to delete ${vendor.name}?", color = Color.Gray) },
+                containerColor = MaterialTheme.colorScheme.surface,
+                title = { Text("Delete Vendor", color = MaterialTheme.colorScheme.onSurface) },
+                text = { Text("Are you sure you want to delete ${vendor.name}?", color = MaterialTheme.colorScheme.onSurfaceVariant) },
                 confirmButton = {
                     Button(
                         onClick = {
                             viewModel.deleteVendor(vendor.id)
                             vendorToDelete = null
                         },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
                     ) {
-                        Text("Delete", color = Color.White)
+                        Text("Delete")
                     }
                 },
                 dismissButton = {
                     TextButton(onClick = { vendorToDelete = null }) {
-                        Text("Cancel", color = Color.Gray)
+                        Text("Cancel", color = MaterialTheme.colorScheme.outline)
                     }
                 }
             )
@@ -168,7 +169,8 @@ fun VendorCard(vendor: Vendor, onEdit: (Vendor) -> Unit, onDelete: (Vendor) -> U
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E))
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
             modifier = Modifier
@@ -181,27 +183,28 @@ fun VendorCard(vendor: Vendor, onEdit: (Vendor) -> Unit, onDelete: (Vendor) -> U
                 Text(
                     text = vendor.name,
                     style = MaterialTheme.typography.titleLarge,
-                    color = Color.White,
-                    fontWeight = FontWeight.SemiBold
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Bold
                 )
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(Icons.Default.Phone, contentDescription = null, modifier = Modifier.size(16.dp), tint = MaterialTheme.colorScheme.primary)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = vendor.phone, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
                 Spacer(modifier = Modifier.height(4.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.Phone, contentDescription = null, modifier = Modifier.size(16.dp), tint = Color.Gray)
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = vendor.phone, style = MaterialTheme.typography.bodyMedium, color = Color.Gray)
-                }
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.LocationOn, contentDescription = null, modifier = Modifier.size(16.dp), tint = Color.Gray)
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = vendor.address, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+                    Icon(Icons.Default.LocationOn, contentDescription = null, modifier = Modifier.size(16.dp), tint = MaterialTheme.colorScheme.primary)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = vendor.address, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
-            Row {
+            Column(horizontalAlignment = Alignment.End) {
                 IconButton(onClick = { onEdit(vendor) }) {
-                    Icon(Icons.Default.Edit, contentDescription = "Edit", tint = Color.Gray)
+                    Icon(Icons.Default.Edit, contentDescription = "Edit", tint = MaterialTheme.colorScheme.primary)
                 }
                 IconButton(onClick = { onDelete(vendor) }) {
-                    Icon(Icons.Default.Delete, contentDescription = "Delete", tint = Color.Red.copy(alpha = 0.7f))
+                    Icon(Icons.Default.Delete, contentDescription = "Delete", tint = MaterialTheme.colorScheme.error.copy(alpha = 0.8f))
                 }
             }
         }
@@ -224,46 +227,31 @@ fun VendorDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(title, color = Color.White) },
-        containerColor = Color(0xFF1E1E1E),
+        title = { Text(title, color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold) },
+        containerColor = MaterialTheme.colorScheme.surface,
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
                     label = { Text("Vendor Name") },
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        focusedLabelColor = MaterialTheme.colorScheme.primary,
-                        unfocusedLabelColor = Color.Gray
-                    ),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp)
                 )
                 OutlinedTextField(
                     value = phone,
                     onValueChange = { phone = it },
                     label = { Text("Phone") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        focusedLabelColor = MaterialTheme.colorScheme.primary,
-                        unfocusedLabelColor = Color.Gray
-                    ),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp)
                 )
                 OutlinedTextField(
                     value = address,
                     onValueChange = { address = it },
                     label = { Text("Address") },
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        focusedLabelColor = MaterialTheme.colorScheme.primary,
-                        unfocusedLabelColor = Color.Gray
-                    ),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp)
                 )
             }
         },
@@ -274,15 +262,15 @@ fun VendorDialog(
                         onConfirm(name, phone, address)
                     }
                 },
-                enabled = name.isNotBlank() && phone.isNotBlank() && address.isNotBlank()
+                enabled = name.isNotBlank() && phone.isNotBlank() && address.isNotBlank(),
+                shape = RoundedCornerShape(8.dp)
             ) {
-                val buttonText = if (title.contains("Add")) "Add" else "Update"
-                Text(buttonText)
+                Text(if (title.contains("Add")) "Add Vendor" else "Update Vendor")
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel", color = Color.Gray)
+                Text("Cancel", color = MaterialTheme.colorScheme.outline)
             }
         }
     )

@@ -30,13 +30,18 @@ fun PaymentScreen(
     
     var showAddDialog by remember { mutableStateOf(false) }
 
+    LaunchedEffect(Unit) {
+        viewModel.fetchPayments()
+    }
+
     Scaffold(
-        containerColor = Color(0xFF121212),
+        containerColor = MaterialTheme.colorScheme.background,
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { showAddDialog = true },
                 containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = Color.White
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+                shape = RoundedCornerShape(16.dp)
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Record Payment")
             }
@@ -44,15 +49,16 @@ fun PaymentScreen(
     ) { padding ->
         Box(modifier = Modifier.padding(padding)) {
             if (isLoading && payments.isEmpty()) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center), color = MaterialTheme.colorScheme.primary)
             } else if (payments.isEmpty()) {
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Icon(Icons.Default.Payments, contentDescription = null, modifier = Modifier.size(64.dp), tint = Color.Gray)
-                    Text("No Payments Recorded", color = Color.Gray)
+                    Icon(Icons.Default.Payments, contentDescription = null, modifier = Modifier.size(64.dp), tint = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text("No Payments Recorded", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             } else {
                 LazyColumn(
@@ -61,10 +67,16 @@ fun PaymentScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     item {
-                        Text("Vendor Payments", style = MaterialTheme.typography.headlineMedium, color = Color.White, fontWeight = FontWeight.Bold)
+                        Text(
+                            "Vendor Payments", 
+                            style = MaterialTheme.typography.headlineMedium, 
+                            color = MaterialTheme.colorScheme.onBackground, 
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
                     }
                     items(payments) { payment ->
-                        PaymentCard(payment)
+                        PaymentCard(payment, vendors)
                     }
                 }
             }
@@ -85,21 +97,39 @@ fun PaymentScreen(
 }
 
 @Composable
-fun PaymentCard(payment: Payment) {
+fun PaymentCard(payment: Payment, vendors: List<Vendor>) {
+    val vendorName = payment.vendorName ?: vendors.find { it.id == payment.vendorId }?.name ?: "Unknown Vendor"
+    
     Card(
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E)),
-        shape = RoundedCornerShape(12.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
             modifier = Modifier.padding(16.dp).fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
-                Text(payment.vendorName ?: "Unknown Vendor", style = MaterialTheme.typography.titleMedium, color = Color.White, fontWeight = FontWeight.Bold)
-                Text(payment.date ?: "", style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = vendorName, 
+                    style = MaterialTheme.typography.titleLarge, 
+                    color = MaterialTheme.colorScheme.onSurface, 
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = payment.date ?: "N/A", 
+                    style = MaterialTheme.typography.bodySmall, 
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
-            Text("₹${payment.amount}", style = MaterialTheme.typography.titleLarge, color = Color.Green, fontWeight = FontWeight.Bold)
+            Text(
+                text = "₹${payment.amount}", 
+                style = MaterialTheme.typography.headlineSmall, 
+                color = Color(0xFF10B981), 
+                fontWeight = FontWeight.ExtraBold
+            )
         }
     }
 }
@@ -117,8 +147,8 @@ fun AddPaymentDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        containerColor = Color(0xFF1E1E1E),
-        title = { Text("Record Payment", color = Color.White) },
+        containerColor = MaterialTheme.colorScheme.surface,
+        title = { Text("Record Payment", color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 ExposedDropdownMenuBox(
@@ -132,19 +162,16 @@ fun AddPaymentDialog(
                         label = { Text("Vendor") },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                         modifier = Modifier.fillMaxWidth().menuAnchor(),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedTextColor = Color.White,
-                            unfocusedTextColor = Color.White
-                        )
+                        shape = RoundedCornerShape(12.dp)
                     )
                     ExposedDropdownMenu(
                         expanded = expanded,
                         onDismissRequest = { expanded = false },
-                        modifier = Modifier.background(Color(0xFF1E1E1E))
+                        modifier = Modifier.background(MaterialTheme.colorScheme.surface)
                     ) {
                         vendors.forEach { vendor ->
                             DropdownMenuItem(
-                                text = { Text(vendor.name, color = Color.White) },
+                                text = { Text(vendor.name) },
                                 onClick = {
                                     selectedVendor = vendor
                                     expanded = false
@@ -160,10 +187,7 @@ fun AddPaymentDialog(
                     label = { Text("Amount (₹)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     modifier = Modifier.fillMaxWidth(),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White
-                    )
+                    shape = RoundedCornerShape(12.dp)
                 )
             }
         },
@@ -173,14 +197,15 @@ fun AddPaymentDialog(
                     val a = amount.toDoubleOrNull() ?: 0.0
                     selectedVendor?.let { onConfirm(it.id, a) }
                 },
-                enabled = selectedVendor != null && amount.isNotEmpty()
+                enabled = selectedVendor != null && amount.isNotEmpty(),
+                shape = RoundedCornerShape(8.dp)
             ) {
-                Text("Record")
+                Text("Record Payment")
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel", color = Color.Gray)
+                Text("Cancel", color = MaterialTheme.colorScheme.outline)
             }
         }
     )

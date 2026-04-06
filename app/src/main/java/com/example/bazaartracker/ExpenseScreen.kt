@@ -33,12 +33,13 @@ fun ExpenseScreen(viewModel: ExpenseViewModel) {
     }
 
     Scaffold(
-        containerColor = Color(0xFF121212),
+        containerColor = MaterialTheme.colorScheme.background,
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { showAddDialog = true },
                 containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = Color.White
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+                shape = RoundedCornerShape(16.dp)
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Add Expense")
             }
@@ -53,7 +54,7 @@ fun ExpenseScreen(viewModel: ExpenseViewModel) {
             } else if (error != null && expenses.isEmpty()) {
                 Text(
                     text = error ?: "Unknown Error",
-                    color = Color.Red,
+                    color = MaterialTheme.colorScheme.error,
                     modifier = Modifier.align(Alignment.Center).padding(16.dp)
                 )
             } else if (!isLoading && expenses.isEmpty()) {
@@ -66,20 +67,20 @@ fun ExpenseScreen(viewModel: ExpenseViewModel) {
                         imageVector = Icons.Default.MoneyOff,
                         contentDescription = null,
                         modifier = Modifier.size(80.dp),
-                        tint = Color.Gray.copy(alpha = 0.5f)
+                        tint = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         text = "No Expenses Found",
                         style = MaterialTheme.typography.headlineSmall,
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onBackground,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = "Track your spending by adding your first expense.",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Gray,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center
                     )
                 }
@@ -93,7 +94,7 @@ fun ExpenseScreen(viewModel: ExpenseViewModel) {
                         Text(
                             text = "Expenses",
                             style = MaterialTheme.typography.headlineMedium,
-                            color = Color.White,
+                            color = MaterialTheme.colorScheme.onBackground,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
@@ -138,23 +139,23 @@ fun ExpenseScreen(viewModel: ExpenseViewModel) {
         expenseToDelete?.let { expense ->
             AlertDialog(
                 onDismissRequest = { expenseToDelete = null },
-                containerColor = Color(0xFF1E1E1E),
-                title = { Text("Delete Expense", color = Color.White) },
-                text = { Text("Are you sure you want to delete this expense?", color = Color.Gray) },
+                containerColor = MaterialTheme.colorScheme.surface,
+                title = { Text("Delete Expense", color = MaterialTheme.colorScheme.onSurface) },
+                text = { Text("Are you sure you want to delete this expense?", color = MaterialTheme.colorScheme.onSurfaceVariant) },
                 confirmButton = {
                     Button(
                         onClick = {
                             viewModel.deleteExpense(expense.id)
                             expenseToDelete = null
                         },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
                     ) {
-                        Text("Delete", color = Color.White)
+                        Text("Delete")
                     }
                 },
                 dismissButton = {
                     TextButton(onClick = { expenseToDelete = null }) {
-                        Text("Cancel", color = Color.Gray)
+                        Text("Cancel", color = MaterialTheme.colorScheme.outline)
                     }
                 }
             )
@@ -167,7 +168,8 @@ fun ExpenseCard(expense: Expense, onEdit: (Expense) -> Unit, onDelete: (Expense)
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E))
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
             modifier = Modifier
@@ -180,28 +182,29 @@ fun ExpenseCard(expense: Expense, onEdit: (Expense) -> Unit, onDelete: (Expense)
                 Text(
                     text = expense.category,
                     style = MaterialTheme.typography.titleLarge,
-                    color = Color.White,
-                    fontWeight = FontWeight.SemiBold
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = expense.date ?: "N/A",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Gray
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = "₹${expense.amount}",
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.error,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.ExtraBold
                 )
             }
             Row {
                 IconButton(onClick = { onEdit(expense) }) {
-                    Icon(Icons.Default.Edit, contentDescription = "Edit", tint = Color.Gray)
+                    Icon(Icons.Default.Edit, contentDescription = "Edit", tint = MaterialTheme.colorScheme.primary)
                 }
                 IconButton(onClick = { onDelete(expense) }) {
-                    Icon(Icons.Default.Delete, contentDescription = "Delete", tint = Color.Red.copy(alpha = 0.7f))
+                    Icon(Icons.Default.Delete, contentDescription = "Delete", tint = MaterialTheme.colorScheme.error.copy(alpha = 0.8f))
                 }
             }
         }
@@ -222,34 +225,24 @@ fun ExpenseDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(title, color = Color.White) },
-        containerColor = Color(0xFF1E1E1E),
+        title = { Text(title, color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold) },
+        containerColor = MaterialTheme.colorScheme.surface,
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 OutlinedTextField(
                     value = category,
                     onValueChange = { category = it },
                     label = { Text("Category") },
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        focusedLabelColor = MaterialTheme.colorScheme.primary,
-                        unfocusedLabelColor = Color.Gray
-                    ),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp)
                 )
                 OutlinedTextField(
                     value = amount,
                     onValueChange = { amount = it },
                     label = { Text("Amount (₹)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        focusedLabelColor = MaterialTheme.colorScheme.primary,
-                        unfocusedLabelColor = Color.Gray
-                    ),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp)
                 )
             }
         },
@@ -261,15 +254,15 @@ fun ExpenseDialog(
                         onConfirm(category, a)
                     }
                 },
-                enabled = category.isNotBlank() && amount.isNotBlank()
+                enabled = category.isNotBlank() && amount.isNotBlank(),
+                shape = RoundedCornerShape(8.dp)
             ) {
-                val buttonText = if (title.contains("Add")) "Add" else "Update"
-                Text(buttonText)
+                Text(if (title.contains("Add")) "Add Expense" else "Update Expense")
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel", color = Color.Gray)
+                Text("Cancel", color = MaterialTheme.colorScheme.outline)
             }
         }
     )

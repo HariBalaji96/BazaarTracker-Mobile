@@ -1,4 +1,4 @@
-package com.example.bazaartracker
+package com.example.bazaartracker.data.models
 
 import com.google.gson.annotations.SerializedName
 
