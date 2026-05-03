@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/navigation_dashboard">
+
+    <fragment
+        android:id="@+id/navigation_dashboard"
+        android:name="com.example.bazaartrackermobile.DashboardFragment"
+        android:label="Dashboard"
+        tools:layout="@layout/fragment_dashboard" />
+
+    <fragment
+        android:id="@+id/navigation_sales"
+        android:name="com.example.bazaartrackermobile.SalesFragment"
+        android:label="Sales"
+        tools:layout="@layout/fragment_sales">
+        <action
+            android:id="@+id/action_navigation_sales_to_createSaleFragment"
+            app:destination="@id/createSaleFragment" />
+        <action
+            android:id="@+id/action_navigation_sales_to_saleDetailFragment"
+            app:destination="@id/saleDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_products"
+        android:name="com.example.bazaartrackermobile.ProductsFragment"
+        android:label="Products"
+        tools:layout="@layout/fragment_products">
+        <action
+            android:id="@+id/action_navigation_products_to_productDetailFragment"
+            app:destination="@id/productDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_vendors"
+        android:name="com.example.bazaartrackermobile.VendorsFragment"
+        android:label="Vendors"
+        tools:layout="@layout/fragment_vendors">
+        <action
+            android:id="@+id/action_navigation_vendors_to_vendorDetailFragment"
+            app:destination="@id/vendorDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_payments"
+        android:name="com.example.bazaartrackermobile.PaymentsFragment"
+        android:label="Payments"
+        tools:layout="@layout/fragment_payments" />
+
+    <fragment
+        android:id="@+id/navigation_expenses"
+        android:name="com.example.bazaartrackermobile.ExpensesFragment"
+        android:label="Expenses"
+        tools:layout="@layout/fragment_expenses" />
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.example.bazaartrackermobile.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" />
+
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="com.example.bazaartrackermobile.SettingsFragment"
+        android:label="Settings"
+        tools:layout="@layout/fragment_settings" />
+
+    <fragment
+        android:id="@+id/navigation_about"
+        android:name="com.example.bazaartrackermobile.AboutFragment"
+        android:label="About"
+        tools:layout="@layout/fragment_about" />
+
+    <fragment
+        android:id="@+id/productDetailFragment"
+        android:name="com.example.bazaartrackermobile.ProductDetailFragment"
+        android:label="Product Details"
+        tools:layout="@layout/fragment_product_detail">
+        <argument
+            android:name="product"
+            app:argType="com.example.bazaartrackermobile.data.remote.Product" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/vendorDetailFragment"
+        android:name="com.example.bazaartrackermobile.VendorDetailFragment"
+        android:label="Vendor Details"
+        tools:layout="@layout/fragment_vendor_detail">
+        <argument
+            android:name="vendor"
+            app:argType="com.example.bazaartrackermobile.data.remote.Vendor" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/createSaleFragment"
+        android:name="com.example.bazaartrackermobile.CreateSaleFragment"
+        android:label="New Sale"
+        tools:layout="@layout/fragment_create_sale" />
+
+    <fragment
+        android:id="@+id/saleDetailFragment"
+        android:name="com.example.bazaartrackermobile.SaleDetailFragment"
+        android:label="Sale Details"
+        tools:layout="@layout/fragment_sale_detail">
+        <argument
+            android:name="sale"
+            app:argType="com.example.bazaartrackermobile.data.remote.Sale" />
+    </fragment>
+</navigation>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/navigation_dashboard"
+            android:icon="@drawable/ic_dashboard"
+            android:title="@string/dashboard" />
+        <item
+            android:id="@+id/navigation_sales"
+            android:icon="@drawable/ic_sales"
+            android:title="@string/sales" />
+        <item
+            android:id="@+id/navigation_products"
+            android:icon="@drawable/ic_products"
+            android:title="@string/products" />
+        <item
+            android:id="@+id/navigation_vendors"
+            android:icon="@drawable/ic_vendors"
+            android:title="@string/vendors" />
+        <item
+            android:id="@+id/navigation_expenses"
+            android:icon="@drawable/ic_expenses"
+            android:title="@string/expenses" />
+        <item
+            android:id="@+id/navigation_payments"
+            android:icon="@drawable/ic_expenses"
+            android:title="@string/payments" />
+    </group>
+
+    <item android:title="Others">
+        <menu>
+            <item
+                android:id="@+id/navigation_settings"
+                android:icon="@android:drawable/ic_menu_preferences"
+                android:title="Settings" />
+            <item
+                android:id="@+id/navigation_about"
+                android:icon="@android:drawable/ic_menu_info_details"
+                android:title="About" />
+            <item
+                android:id="@+id/navigation_logout"
+                android:icon="@android:drawable/ic_lock_power_off"
+                android:title="Logout" />
+        </menu>
+    </item>
+</menu>
