@@ -11,8 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@android:drawable/ic_menu_revert"
-        app:title="@string/add_sale" />
+        app:navigationIcon="@drawable/ic_back"
+        app:title="@string/add_sale"
+        app:titleTextAppearance="@style/TextAppearance.Material3.TitleLarge"
+        app:titleTextColor="@color/text_primary" />
 
     <LinearLayout
         android:id="@+id/stepContainer"
@@ -34,16 +36,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:text="Step 1: Select Vendor"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:fontFamily="sans-serif-black"
+                android:text="@string/step_select_vendor"
+                android:textColor="@color/text_primary"
+                android:textSize="20sp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilVendor"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Select Vendor">
+                android:hint="@string/select_vendor"
+                app:startIconDrawable="@drawable/ic_vendors"
+                app:startIconTint="@color/text_secondary">
 
                 <AutoCompleteTextView
                     android:id="@+id/actvVendor"
@@ -65,9 +70,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:text="Step 2: Sale Type"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:fontFamily="sans-serif-black"
+                android:text="@string/step_sale_type"
+                android:textColor="@color/text_primary"
+                android:textSize="20sp" />
 
             <RadioGroup
                 android:id="@+id/rgSaleType"
@@ -80,14 +86,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
-                    android:text="CASH" />
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/cash" />
 
                 <RadioButton
                     android:id="@+id/rbCredit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
-                    android:text="CREDIT" />
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/credit" />
             </RadioGroup>
         </LinearLayout>
 
@@ -102,22 +110,26 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Step 3: Add Products"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:layout_marginBottom="16dp"
+                android:fontFamily="sans-serif-black"
+                android:text="@string/step_add_products"
+                android:textColor="@color/text_primary"
+                android:textSize="20sp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilProduct"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Select Product">
+                android:hint="@string/select_product"
+                app:startIconDrawable="@drawable/ic_products"
+                app:startIconTint="@color/text_secondary">
 
                 <AutoCompleteTextView
                     android:id="@+id/actvProduct"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
                     android:inputType="none" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -125,6 +137,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:gravity="bottom"
                 android:orientation="horizontal">
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -133,31 +146,35 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Quantity">
+                    android:hint="@string/quantity">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etQuantity"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
                         android:inputType="number" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
                     android:id="@+id/btnAddProduct"
+                    style="@style/Widget.BazaarTracker.Button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
                     android:layout_marginStart="8dp"
-                    android:text="Add" />
+                    android:paddingHorizontal="24dp"
+                    android:text="@string/add" />
             </LinearLayout>
 
             <TextView
                 android:id="@+id/tvProductInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:textSize="12sp"
-                tools:text="Price: $10.00 | Stock: 50" />
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp"
+                tools:text="Price: ₹10.00 | Stock: 50" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvCart"
@@ -172,10 +189,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:layout_marginTop="8dp"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                tools:text="Total: $0.00" />
+                android:layout_marginTop="12dp"
+                android:fontFamily="sans-serif-black"
+                android:textColor="@color/colorPrimary"
+                android:textSize="22sp"
+                tools:text="Total: ₹0.00" />
         </LinearLayout>
 
         <!-- Step 4: Review -->
@@ -190,24 +208,36 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:text="Step 4: Review Sale"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:fontFamily="sans-serif-black"
+                android:text="@string/step_review_sale"
+                android:textColor="@color/text_primary"
+                android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/tvReviewSummary"
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.BazaarTracker.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
-                tools:text="Vendor: John Doe\nType: CASH\nItems: 3" />
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:id="@+id/tvReviewSummary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:padding="16dp"
+                    android:textColor="@color/text_primary"
+                    android:textSize="15sp"
+                    tools:text="Vendor: John Doe\nType: CASH\nItems: 3" />
+            </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilDate"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:hint="Sale Date">
+                android:hint="@string/sale_date"
+                app:startIconDrawable="@drawable/ic_dashboard"
+                app:startIconTint="@color/text_secondary">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etDate"
@@ -224,23 +254,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:paddingTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <Button
             android:id="@+id/btnBack"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
+            style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Back"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/back"
             android:visibility="invisible" />
 
         <Button
             android:id="@+id/btnNext"
+            style="@style/Widget.BazaarTracker.Button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Next" />
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/next" />
     </LinearLayout>
 
     <ProgressBar

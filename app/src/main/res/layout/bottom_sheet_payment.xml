@@ -17,16 +17,18 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:text="@string/record_payment"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textSize="24sp"
+            android:fontFamily="sans-serif-black"
+            android:textColor="@color/text_primary" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilVendor"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:hint="@string/select_vendor">
+            android:hint="@string/select_vendor"
+            app:startIconDrawable="@drawable/ic_vendors">
 
             <AutoCompleteTextView
                 android:id="@+id/actvVendor"
@@ -37,26 +39,29 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilAmount"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:hint="@string/amount">
+            android:hint="@string/amount"
+            app:startIconDrawable="@drawable/ic_sales">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etAmount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="numberDecimal" />
+                android:inputType="numberDecimal"
+                android:fontFamily="sans-serif-condensed-medium" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilMethod"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:hint="@string/payment_method">
+            android:hint="@string/payment_method"
+            app:startIconDrawable="@drawable/ic_dashboard">
 
             <AutoCompleteTextView
                 android:id="@+id/actvMethod"
@@ -67,11 +72,12 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilDate"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:hint="@string/payment_date">
+            android:hint="@string/payment_date"
+            app:startIconDrawable="@drawable/ic_dashboard">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etDate"
@@ -83,11 +89,12 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilNotes"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:hint="@string/notes">
+            android:hint="@string/notes"
+            app:startIconDrawable="@drawable/ic_dashboard">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etNotes"
@@ -106,18 +113,21 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnRecord"
+                    style="@style/Widget.BazaarTracker.Button"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="56dp"
                     android:text="@string/record_payment" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnCancel"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/cancel" />
+                    android:layout_marginTop="8dp"
+                    android:text="@string/cancel"
+                    android:textColor="@color/text_secondary" />
             </LinearLayout>
 
             <ProgressBar

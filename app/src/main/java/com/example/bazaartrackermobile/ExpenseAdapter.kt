@@ -3,6 +3,7 @@ package com.example.bazaartrackermobile
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -33,9 +34,13 @@ class ExpenseAdapter(
             binding.tvDate.text = expense.date
             binding.tvAmount.text = String.format(Locale.getDefault(), "₹%.2f", expense.amount)
 
-            // Color indicator based on category (simple hash-based color for variety)
-            val color = getCategoryColor(expense.category)
-            binding.viewCategoryIndicator.setBackgroundColor(color)
+            // Color indicator based on category
+            val indicatorRes = getCategoryGradient(expense.category)
+            binding.viewCategoryIndicator.setBackgroundResource(indicatorRes)
+
+            binding.tvCategory.setBackgroundResource(indicatorRes)
+            binding.tvCategory.setTextColor(ContextCompat.getColor(binding.root.context, R.color.white))
+            binding.tvCategory.backgroundTintList = null // Remove tint to show gradient
 
             binding.root.setOnClickListener { onItemClick(expense) }
             binding.root.setOnLongClickListener {
@@ -44,14 +49,14 @@ class ExpenseAdapter(
             }
         }
 
-        private fun getCategoryColor(category: String): Int {
+        private fun getCategoryGradient(category: String): Int {
             return when (category.lowercase()) {
-                "rent" -> Color.parseColor("#E91E63")
-                "salary" -> Color.parseColor("#4CAF50")
-                "utility" -> Color.parseColor("#2196F3")
-                "maintenance" -> Color.parseColor("#FF9800")
-                "travel" -> Color.parseColor("#9C27B0")
-                else -> Color.parseColor("#607D8B")
+                "rent" -> R.drawable.bg_gradient_danger
+                "salary" -> R.drawable.bg_gradient_success
+                "utility" -> R.drawable.bg_gradient_info
+                "maintenance" -> R.drawable.bg_gradient_warning
+                "travel" -> R.drawable.bg_gradient_primary
+                else -> R.drawable.bg_status_tag
             }
         }
     }

@@ -1,49 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.BazaarTracker.Card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:paddingVertical="8dp">
-
-    <View
-        android:id="@+id/viewTypeIndicator"
-        android:layout_width="4dp"
-        android:layout_height="match_parent"
-        android:layout_marginEnd="12dp"
-        tools:background="@android:color/holo_green_light" />
+    android:layout_marginVertical="4dp">
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="12dp">
+
+        <View
+            android:id="@+id/viewTypeIndicator"
+            android:layout_width="4dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="12dp"
+            android:background="@color/success_main" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvReason"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp"
+                tools:text="Stock Purchase" />
+
+            <TextView
+                android:id="@+id/tvDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp"
+                tools:text="Oct 27, 2023 • 14:30" />
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/tvReason"
+            android:id="@+id/tvQuantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            tools:text="Stock Purchase" />
+            android:fontFamily="sans-serif-condensed-medium"
+            android:textSize="18sp"
+            tools:text="+20"
+            tools:textColor="@color/success_main" />
 
-        <TextView
-            android:id="@+id/tvDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="12sp"
-            tools:text="2023-10-27 14:30" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tvQuantity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        tools:text="+20"
-        tools:textColor="@android:color/holo_green_light" />
-
-</LinearLayout>
+</com.google.android.material.card.MaterialCardView>

@@ -26,7 +26,7 @@ class AboutFragment : Fragment() {
         
         try {
             val pInfo = requireContext().packageManager.getPackageInfo(requireContext().packageName, 0)
-            binding.tvVersion.text = "Version: ${pInfo.versionName}"
+            binding.tvVersion.text = getString(R.string.version_format, pInfo.versionName)
         } catch (e: Exception) {
             e.printStackTrace()
         }

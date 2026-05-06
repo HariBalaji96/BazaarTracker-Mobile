@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Bazaar Tracker"
+        android:text="@string/app_name"
         android:textSize="24sp"
         android:textStyle="bold" />
 
@@ -31,13 +31,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:gravity="center"
-        android:text="Efficiently manage your sales, products, vendors and expenses in one place." />
+        android:text="@string/about_description" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
-        android:text="© 2024 BazaarTracker Team"
+        android:text="@string/copyright"
         android:textColor="@android:color/darker_gray" />
 
 </LinearLayout>

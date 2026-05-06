@@ -11,16 +11,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:hint="Search products..."
+        android:hint="@string/search_products"
         app:endIconMode="clear_text"
         app:layout_constraintTop_toTopOf="parent"
-        app:startIconDrawable="@android:drawable/ic_menu_search">
+        app:startIconDrawable="@drawable/ic_search"
+        app:startIconTint="@color/text_secondary">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text" />
+            android:fontFamily="sans-serif-medium"
+            android:inputType="text"
+            android:textColor="@color/text_primary" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <HorizontalScrollView
@@ -42,14 +45,14 @@
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Active Only" />
+                android:text="@string/active_only" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipInStock"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="In Stock" />
+                android:text="@string/in_stock" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipCategory"
@@ -57,7 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="All Units"
-                app:chipIcon="@android:drawable/ic_menu_sort_by_size" />
+                app:chipIcon="@drawable/ic_filter" />
 
         </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>
@@ -107,7 +110,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="24dp"
         android:contentDescription="@string/add_product"
-        android:src="@android:drawable/ic_input_add"
+        android:src="@drawable/ic_add"
+        app:backgroundTint="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:tint="@android:color/white" />

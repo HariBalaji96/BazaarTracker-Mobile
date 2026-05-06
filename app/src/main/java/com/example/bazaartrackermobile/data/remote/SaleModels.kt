@@ -10,6 +10,8 @@ data class Sale(
     val vendorName: String? = null,
     val saleType: String, // CASH or CREDIT
     val totalAmount: Double,
+    val paidAmount: Double? = null,
+    val pendingAmount: Double? = null,
     val saleDate: String,
     val items: List<SaleItem>
 ) : Parcelable
@@ -25,6 +27,7 @@ data class SaleItem(
 data class CreateSaleRequest(
     val vendorId: String,
     val saleType: String,
+    val saleDate: String? = null,
     val items: List<CreateSaleItemRequest>
 )
 

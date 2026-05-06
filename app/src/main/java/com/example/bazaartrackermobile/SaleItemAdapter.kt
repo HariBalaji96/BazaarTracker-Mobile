@@ -27,7 +27,7 @@ class SaleItemAdapter : ListAdapter<SaleItem, SaleItemAdapter.SaleItemViewHolder
             val context = binding.root.context
             binding.tvProductName.text = item.productName ?: "Unknown Product"
             // Reusing a similar format for quantity and price display
-            binding.tvPriceQuantity.text = "${item.quantity} x ${String.format(Locale.getDefault(), "₹%.2f", item.price)}"
+            binding.tvPriceQuantity.text = context.getString(R.string.cart_item_format, item.quantity, "", item.price).replace("  ", " ")
             binding.tvLineTotal.text = String.format(Locale.getDefault(), "₹%.2f", item.quantity * item.price)
         }
     }

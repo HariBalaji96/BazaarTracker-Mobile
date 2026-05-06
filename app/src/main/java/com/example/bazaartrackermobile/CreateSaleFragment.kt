@@ -250,6 +250,7 @@ class CreateSaleFragment : Fragment() {
         val request = CreateSaleRequest(
             vendorId = selectedVendor!!.id,
             saleType = type,
+            saleDate = saleDate,
             items = cartItems.map { CreateSaleItemRequest(it.productId, it.quantity, it.price) }
         )
 

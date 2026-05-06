@@ -9,14 +9,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.bazaartrackermobile.data.local.AppDatabase
 import com.example.bazaartrackermobile.data.remote.ApiService
 import com.example.bazaartrackermobile.data.remote.Payment
 import com.example.bazaartrackermobile.data.remote.RetrofitClient
 import com.example.bazaartrackermobile.databinding.FragmentPaymentsBinding
-import com.example.bazaartrackermobile.util.toDomain
-import com.example.bazaartrackermobile.util.toEntity
-import kotlinx.coroutines.flow.first
+import com.example.bazaartrackermobile.util.ErrorHandler
 import kotlinx.coroutines.launch
 
 class PaymentsFragment : Fragment() {
@@ -24,7 +21,6 @@ class PaymentsFragment : Fragment() {
     private var _binding: FragmentPaymentsBinding? = null
     private val binding get() = _binding!!
     private lateinit var apiService: ApiService
-    private lateinit var database: AppDatabase
     private lateinit var adapter: PaymentAdapter
 
     override fun onCreateView(
@@ -39,11 +35,9 @@ class PaymentsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         apiService = RetrofitClient.getClient(requireContext()).create(ApiService::class.java)
-        database = AppDatabase.getDatabase(requireContext())
 
         setupRecyclerView()
         setupListeners()
-        loadCachedData()
         fetchPayments()
     }
 
@@ -77,15 +71,6 @@ class PaymentsFragment : Fragment() {
         bottomSheet.show(parentFragmentManager, PaymentBottomSheet.TAG)
     }
 
-    private fun loadCachedData() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            val cachedEntities = database.paymentDao().getAllPayments().first()
-            if (cachedEntities.isNotEmpty()) {
-                adapter.submitList(cachedEntities.map { it.toDomain() })
-            }
-        }
-    }
-
     private fun fetchPayments() {
         viewLifecycleOwner.lifecycleScope.launch {
             try {
@@ -93,29 +78,17 @@ class PaymentsFragment : Fragment() {
                 val response = apiService.getPayments()
                 if (response.isSuccessful && response.body() != null) {
                     val payments = response.body()!!
-                    
-                    // Update cache
-                    database.paymentDao().deleteAllPayments()
-                    database.paymentDao().insertPayments(payments.map { it.toEntity() })
-                    
                     adapter.submitList(payments)
                     binding.tvEmptyState.visibility = if (payments.isEmpty()) View.VISIBLE else View.GONE
                 } else {
-                    handleFetchError()
+                    val message = ErrorHandler.parseError(response.code(), response.errorBody()?.string())
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
-                handleFetchError()
+                Toast.makeText(requireContext(), ErrorHandler.getErrorMessage(e), Toast.LENGTH_SHORT).show()
             } finally {
                 showLoading(false)
             }
-        }
-    }
-
-    private fun handleFetchError() {
-        if (adapter.currentList.isEmpty()) {
-            Toast.makeText(requireContext(), getString(R.string.failed_to_fetch_payments), Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(requireContext(), "Showing offline data", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -138,10 +111,11 @@ class PaymentsFragment : Fragment() {
                     Toast.makeText(requireContext(), getString(R.string.payment_deleted), Toast.LENGTH_SHORT).show()
                     fetchPayments()
                 } else {
-                    Toast.makeText(requireContext(), "Failed to delete payment", Toast.LENGTH_SHORT).show()
+                    val message = ErrorHandler.parseError(response.code(), response.errorBody()?.string())
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), ErrorHandler.getErrorMessage(e), Toast.LENGTH_SHORT).show()
             }
         }
     }

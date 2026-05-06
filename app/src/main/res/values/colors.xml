@@ -2,4 +2,30 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Modern Palette -->
+    <color name="colorPrimary">#6366F1</color>
+    <color name="colorPrimaryVariant">#4F46E5</color>
+    <color name="colorSecondary">#EC4899</color>
+    <color name="colorSecondaryVariant">#DB2777</color>
+
+    <color name="gradient_start">#6366F1</color>
+    <color name="gradient_end">#A855F7</color>
+
+    <color name="background_light">#F8FAFC</color>
+    <color name="surface_light">#FFFFFF</color>
+    <color name="on_surface_light">#1E293B</color>
+
+    <color name="success">#22C55E</color>
+    <color name="success_main">#22C55E</color>
+    <color name="error">#EF4444</color>
+    <color name="danger_main">#EF4444</color>
+    <color name="warning">#F59E0B</color>
+    <color name="warning_main">#F59E0B</color>
+    <color name="info">#3B82F6</color>
+    <color name="info_main">#3B82F6</color>
+
+    <color name="text_primary">#1E293B</color>
+    <color name="text_secondary">#64748B</color>
+    <color name="divider">#E2E8F0</color>
 </resources>

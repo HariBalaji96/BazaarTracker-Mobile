@@ -12,15 +12,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.bazaartrackermobile.data.local.AppDatabase
 import com.example.bazaartrackermobile.data.remote.ApiService
 import com.example.bazaartrackermobile.data.remote.Product
 import com.example.bazaartrackermobile.data.remote.RetrofitClient
 import com.example.bazaartrackermobile.databinding.FragmentProductsBinding
-import com.example.bazaartrackermobile.util.DateUtils
-import com.example.bazaartrackermobile.util.toDomain
-import com.example.bazaartrackermobile.util.toEntity
-import kotlinx.coroutines.flow.first
+import com.example.bazaartrackermobile.util.ErrorHandler
 import kotlinx.coroutines.launch
 
 class ProductsFragment : Fragment() {
@@ -28,7 +24,6 @@ class ProductsFragment : Fragment() {
     private var _binding: FragmentProductsBinding? = null
     private val binding get() = _binding!!
     private lateinit var apiService: ApiService
-    private lateinit var database: AppDatabase
     private lateinit var adapter: ProductAdapter
     private var allProducts: List<Product> = emptyList()
     private var selectedUnit: String? = null
@@ -45,11 +40,9 @@ class ProductsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         apiService = RetrofitClient.getClient(requireContext()).create(ApiService::class.java)
-        database = AppDatabase.getDatabase(requireContext())
         
         setupRecyclerView()
         setupListeners()
-        loadCachedData()
         fetchProducts()
     }
 
@@ -137,52 +130,28 @@ class ProductsFragment : Fragment() {
         bottomSheet.show(parentFragmentManager, ProductBottomSheet.TAG)
     }
 
-    private fun loadCachedData() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            val cachedEntities = database.productDao().getAllProducts().first()
-            if (cachedEntities.isNotEmpty()) {
-                allProducts = cachedEntities.map { it.toDomain() }
-                applyFilters()
-            }
-        }
-    }
-
     private fun fetchProducts() {
         viewLifecycleOwner.lifecycleScope.launch {
             try {
                 showLoading(true)
                 val response = apiService.getProducts()
                 if (response.isSuccessful && response.body() != null) {
-                    val products = response.body()!!
-                    
-                    database.productDao().deleteAllProducts()
-                    database.productDao().insertProducts(products.map { it.toEntity() })
-                    
-                    allProducts = products
+                    allProducts = response.body()!!
                     applyFilters()
                 } else {
-                    // It's possible response.body() is an empty list which is successful
-                    // Or it's a 204 No Content
                     if (response.code() == 204 || response.body()?.isEmpty() == true) {
                         allProducts = emptyList()
                         applyFilters()
                     } else {
-                        handleFetchError()
+                        val message = ErrorHandler.parseError(response.code(), response.errorBody()?.string())
+                        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
                     }
                 }
             } catch (e: Exception) {
-                handleFetchError()
+                Toast.makeText(requireContext(), ErrorHandler.getErrorMessage(e), Toast.LENGTH_SHORT).show()
             } finally {
                 showLoading(false)
             }
-        }
-    }
-
-    private fun handleFetchError() {
-        if (allProducts.isEmpty()) {
-            Toast.makeText(requireContext(), "Failed to fetch products", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(requireContext(), "Showing offline data", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -205,10 +174,11 @@ class ProductsFragment : Fragment() {
                     Toast.makeText(requireContext(), getString(R.string.product_deleted), Toast.LENGTH_SHORT).show()
                     fetchProducts()
                 } else {
-                    Toast.makeText(requireContext(), getString(R.string.failed_to_delete_product), Toast.LENGTH_SHORT).show()
+                    val message = ErrorHandler.parseError(response.code(), response.errorBody()?.string())
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), ErrorHandler.getErrorMessage(e), Toast.LENGTH_SHORT).show()
             }
         }
     }

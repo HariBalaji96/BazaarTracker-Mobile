@@ -16,16 +16,18 @@
             android:id="@+id/tvProductName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/text_primary"
             android:textSize="14sp"
-            android:textStyle="bold"
             tools:text="Apple" />
 
         <TextView
             android:id="@+id/tvPriceQuantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/text_secondary"
             android:textSize="12sp"
-            tools:text="2 kg x $10.00" />
+            tools:text="2 kg x ₹10.00" />
     </LinearLayout>
 
     <TextView
@@ -33,8 +35,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:textSize="14sp"
-        android:textStyle="bold"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:textColor="@color/text_primary"
+        android:textSize="16sp"
         tools:text="₹20.00" />
 
 </LinearLayout>

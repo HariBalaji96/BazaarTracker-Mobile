@@ -12,14 +12,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.bazaartrackermobile.data.local.AppDatabase
 import com.example.bazaartrackermobile.data.remote.ApiService
 import com.example.bazaartrackermobile.data.remote.RetrofitClient
 import com.example.bazaartrackermobile.data.remote.Vendor
 import com.example.bazaartrackermobile.databinding.FragmentVendorsBinding
-import com.example.bazaartrackermobile.util.toDomain
-import com.example.bazaartrackermobile.util.toEntity
-import kotlinx.coroutines.flow.first
+import com.example.bazaartrackermobile.util.ErrorHandler
 import kotlinx.coroutines.launch
 
 class VendorsFragment : Fragment() {
@@ -27,7 +24,6 @@ class VendorsFragment : Fragment() {
     private var _binding: FragmentVendorsBinding? = null
     private val binding get() = _binding!!
     private lateinit var apiService: ApiService
-    private lateinit var database: AppDatabase
     private lateinit var adapter: VendorAdapter
     private var allVendors: List<Vendor> = emptyList()
 
@@ -43,11 +39,9 @@ class VendorsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         apiService = RetrofitClient.getClient(requireContext()).create(ApiService::class.java)
-        database = AppDatabase.getDatabase(requireContext())
 
         setupRecyclerView()
         setupListeners()
-        loadCachedData()
         fetchVendors()
     }
 
@@ -115,46 +109,23 @@ class VendorsFragment : Fragment() {
         bottomSheet.show(parentFragmentManager, VendorBottomSheet.TAG)
     }
 
-    private fun loadCachedData() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            val cachedEntities = database.vendorDao().getAllVendors().first()
-            if (cachedEntities.isNotEmpty()) {
-                allVendors = cachedEntities.map { it.toDomain() }
-                applyFilters()
-            }
-        }
-    }
-
     private fun fetchVendors() {
         viewLifecycleOwner.lifecycleScope.launch {
             try {
                 showLoading(true)
                 val response = apiService.getVendors()
                 if (response.isSuccessful && response.body() != null) {
-                    val vendors = response.body()!!
-                    
-                    // Update cache
-                    database.vendorDao().deleteAllVendors()
-                    database.vendorDao().insertVendors(vendors.map { it.toEntity() })
-                    
-                    allVendors = vendors
+                    allVendors = response.body()!!
                     applyFilters()
                 } else {
-                    handleFetchError()
+                    val message = ErrorHandler.parseError(response.code(), response.errorBody()?.string())
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
-                handleFetchError()
+                Toast.makeText(requireContext(), ErrorHandler.getErrorMessage(e), Toast.LENGTH_SHORT).show()
             } finally {
                 showLoading(false)
             }
-        }
-    }
-
-    private fun handleFetchError() {
-        if (allVendors.isEmpty()) {
-            Toast.makeText(requireContext(), getString(R.string.failed_to_fetch_vendors), Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(requireContext(), "Showing offline data", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -177,10 +148,11 @@ class VendorsFragment : Fragment() {
                     Toast.makeText(requireContext(), getString(R.string.vendor_deleted), Toast.LENGTH_SHORT).show()
                     fetchVendors()
                 } else {
-                    Toast.makeText(requireContext(), "Failed to delete vendor", Toast.LENGTH_SHORT).show()
+                    val message = ErrorHandler.parseError(response.code(), response.errorBody()?.string())
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), ErrorHandler.getErrorMessage(e), Toast.LENGTH_SHORT).show()
             }
         }
     }

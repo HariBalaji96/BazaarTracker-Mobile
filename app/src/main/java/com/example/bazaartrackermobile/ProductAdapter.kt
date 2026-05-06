@@ -32,12 +32,12 @@ class ProductAdapter(
             binding.tvProductPrice.text = String.format(Locale.getDefault(), "₹%.2f", product.price)
             binding.tvProductStock.text = context.getString(R.string.product_stock_format, product.stock, product.unit)
 
-            val statusColor = if (product.active) {
-                android.R.color.holo_green_light
+            val statusDrawable = if (product.active) {
+                R.drawable.bg_gradient_success
             } else {
-                android.R.color.darker_gray
+                R.drawable.bg_status_tag
             }
-            binding.viewActiveStatus.setBackgroundResource(statusColor)
+            binding.viewActiveStatus.setBackgroundResource(statusDrawable)
 
             binding.root.setOnClickListener { onItemClick(product) }
             binding.btnDelete.setOnClickListener { onDeleteClick(product) }

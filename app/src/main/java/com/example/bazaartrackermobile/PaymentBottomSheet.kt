@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.bazaartrackermobile.data.remote.ApiService
 import com.example.bazaartrackermobile.data.remote.PaymentRequest
 import com.example.bazaartrackermobile.data.remote.RetrofitClient
+import com.example.bazaartrackermobile.data.remote.Sale
 import com.example.bazaartrackermobile.data.remote.Vendor
 import com.example.bazaartrackermobile.databinding.BottomSheetPaymentBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -20,6 +21,7 @@ import java.util.Locale
 
 class PaymentBottomSheet(
     private val preSelectedVendor: Vendor? = null,
+    private val preSelectedSale: Sale? = null,
     private val onDismiss: () -> Unit
 ) : BottomSheetDialogFragment() {
 
@@ -55,10 +57,24 @@ class PaymentBottomSheet(
             binding.actvVendor.setText(selectedVendor!!.name, false)
             binding.tilVendor.isEnabled = false
         }
+
+        if (preSelectedSale != null) {
+            val pending = preSelectedSale.pendingAmount ?: if (preSelectedSale.saleType == "CREDIT") preSelectedSale.totalAmount else 0.0
+            binding.etAmount.setText(pending.toString())
+            if (binding.etNotes.text.isNullOrBlank()) {
+                binding.etNotes.setText(getString(R.string.payment_for_sale, preSelectedSale.id))
+            }
+        }
     }
 
     private fun setupDropdowns() {
-        val methods = arrayOf("Cash", "Check", "Bank Transfer", "Online", "Other")
+        val methods = arrayOf(
+            getString(R.string.method_cash),
+            getString(R.string.method_check),
+            getString(R.string.method_bank_transfer),
+            getString(R.string.method_online),
+            getString(R.string.method_other)
+        )
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, methods)
         binding.actvMethod.setAdapter(adapter)
     }
@@ -157,7 +173,8 @@ class PaymentBottomSheet(
             amount = binding.etAmount.text.toString().toDouble(),
             paymentMethod = binding.actvMethod.text.toString(),
             date = selectedDate,
-            description = binding.etNotes.text.toString()
+            description = binding.etNotes.text.toString(),
+            saleId = preSelectedSale?.id
         )
 
         viewLifecycleOwner.lifecycleScope.launch {

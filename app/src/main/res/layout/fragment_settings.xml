@@ -26,7 +26,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Account"
+                android:text="@string/account"
                 android:textColor="?attr/colorPrimary"
                 android:textStyle="bold" />
 
@@ -36,7 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start|center_vertical"
-                android:text="Edit Profile"
+                android:text="@string/edit_profile"
                 android:textAllCaps="false"
                 android:textColor="@android:color/black"
                 app:icon="@android:drawable/ic_menu_edit"
@@ -48,7 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start|center_vertical"
-                android:text="Change Password"
+                android:text="@string/change_password"
                 android:textAllCaps="false"
                 android:textColor="@android:color/black"
                 app:icon="@android:drawable/ic_lock_idle_lock"
@@ -63,7 +63,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="App Information"
+                android:text="@string/app_information"
                 android:textColor="?attr/colorPrimary"
                 android:textStyle="bold" />
 
@@ -73,7 +73,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start|center_vertical"
-                android:text="Terms &amp; Conditions"
+                android:text="@string/terms_conditions"
                 android:textAllCaps="false"
                 android:textColor="@android:color/black" />
 
@@ -83,7 +83,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start|center_vertical"
-                android:text="Privacy Policy"
+                android:text="@string/privacy_policy"
                 android:textAllCaps="false"
                 android:textColor="@android:color/black" />
 
@@ -97,7 +97,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="App Version" />
+                    android:text="@string/app_version_label" />
 
                 <TextView
                     android:id="@+id/tvVersion"
@@ -119,7 +119,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start|center_vertical"
-                android:text="Logout"
+                android:text="@string/logout"
                 android:textAllCaps="false"
                 android:textColor="@android:color/holo_red_dark"
                 app:icon="@android:drawable/ic_lock_power_off"

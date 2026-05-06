@@ -2,12 +2,11 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.BazaarTracker.Card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
-    android:layout_marginVertical="8dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="2dp">
+    android:layout_marginVertical="8dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -18,8 +17,9 @@
             android:id="@+id/tvVendorName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-black"
+            android:textColor="@color/text_primary"
             android:textSize="18sp"
-            android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/btnEdit"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -30,6 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:textColor="@color/text_secondary"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvVendorName"
@@ -42,6 +43,7 @@
             android:layout_marginTop="2dp"
             android:ellipsize="end"
             android:maxLines="1"
+            android:textColor="@color/text_secondary"
             android:textSize="12sp"
             app:layout_constraintEnd_toStartOf="@+id/btnEdit"
             app:layout_constraintStart_toStartOf="parent"
@@ -53,7 +55,8 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginVertical="12dp"
-            android:background="?android:attr/listDivider"
+            android:alpha="0.1"
+            android:background="@color/text_primary"
             app:layout_constraintTop_toBottomOf="@+id/tvAddress" />
 
         <LinearLayout
@@ -74,14 +77,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/credit"
-                    android:textSize="11sp" />
+                    android:textColor="@color/text_secondary"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tvTotalCredit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-condensed-medium"
+                    android:textColor="@color/info_main"
+                    android:textSize="16sp"
                     tools:text="₹1000" />
             </LinearLayout>
 
@@ -95,14 +101,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/paid"
-                    android:textSize="11sp" />
+                    android:textColor="@color/text_secondary"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tvTotalPaid"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-condensed-medium"
+                    android:textColor="@color/success_main"
+                    android:textSize="16sp"
                     tools:text="₹800" />
             </LinearLayout>
 
@@ -116,27 +125,33 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/pending"
-                    android:textSize="11sp" />
+                    android:textColor="@color/text_secondary"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tvPending"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-condensed-medium"
+                    android:textColor="@color/danger_main"
+                    android:textSize="16sp"
                     tools:text="₹200" />
             </LinearLayout>
         </LinearLayout>
 
         <ImageButton
             android:id="@+id/btnEdit"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/edit"
-            android:src="@android:drawable/ic_menu_edit"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_edit"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/colorPrimary" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

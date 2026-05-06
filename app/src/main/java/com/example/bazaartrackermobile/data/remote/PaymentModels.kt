@@ -19,7 +19,8 @@ data class PaymentRequest(
     val amount: Double,
     val paymentMethod: String,
     val date: String,
-    val description: String? = null
+    val description: String? = null,
+    val saleId: String? = null
 )
 
 data class PaymentResponse(

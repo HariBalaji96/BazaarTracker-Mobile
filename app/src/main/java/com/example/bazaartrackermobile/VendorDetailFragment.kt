@@ -69,13 +69,33 @@ class VendorDetailFragment : Fragment() {
     }
 
     private fun setupRecyclerViews() {
-        salesAdapter = RecentSaleAdapter()
+        salesAdapter = RecentSaleAdapter { recentSale ->
+            navigateToSaleDetail(recentSale.id)
+        }
         binding.rvRecentSales.layoutManager = LinearLayoutManager(requireContext())
         binding.rvRecentSales.adapter = salesAdapter
 
-        paymentsAdapter = PaymentRecordAdapter()
+        paymentsAdapter = PaymentRecordAdapter { payment ->
+            showDeletePaymentConfirmation(payment)
+        }
         binding.rvPayments.layoutManager = LinearLayoutManager(requireContext())
         binding.rvPayments.adapter = paymentsAdapter
+    }
+
+    private fun navigateToSaleDetail(saleId: String) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val response = apiService.getSale(saleId)
+                if (response.isSuccessful && response.body() != null) {
+                    val bundle = Bundle().apply {
+                        putParcelable("sale", response.body())
+                    }
+                    findNavController().navigate(R.id.saleDetailFragment, bundle)
+                }
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun setupUI(vendor: Vendor) {
@@ -96,6 +116,10 @@ class VendorDetailFragment : Fragment() {
     }
 
     private fun setupListeners() {
+        binding.btnRecordPayment.setOnClickListener {
+            showPaymentBottomSheet()
+        }
+
         binding.btnEdit.setOnClickListener {
             showEditBottomSheet()
         }
@@ -103,6 +127,14 @@ class VendorDetailFragment : Fragment() {
         binding.btnDelete.setOnClickListener {
             showDeleteConfirmation()
         }
+    }
+
+    private fun showPaymentBottomSheet() {
+        val bottomSheet = PaymentBottomSheet(currentVendor) {
+            refreshVendorData()
+            fetchData()
+        }
+        bottomSheet.show(parentFragmentManager, PaymentBottomSheet.TAG)
     }
 
     private fun showEditBottomSheet() {
@@ -157,6 +189,34 @@ class VendorDetailFragment : Fragment() {
             }
             .setNegativeButton(R.string.cancel, null)
             .show()
+    }
+
+    private fun showDeletePaymentConfirmation(payment: com.example.bazaartrackermobile.data.remote.PaymentRecord) {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.delete_payment)
+            .setMessage(R.string.delete_payment_confirmation)
+            .setPositiveButton(R.string.delete) { _, _ ->
+                deletePayment(payment)
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun deletePayment(payment: com.example.bazaartrackermobile.data.remote.PaymentRecord) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val response = apiService.deletePayment(payment.id)
+                if (response.isSuccessful) {
+                    Toast.makeText(requireContext(), getString(R.string.payment_deleted), Toast.LENGTH_SHORT).show()
+                    refreshVendorData()
+                    fetchData()
+                } else {
+                    Toast.makeText(requireContext(), "Failed to delete payment", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun deleteVendor() {
